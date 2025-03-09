@@ -1,15 +1,13 @@
 import os
 import random
 import matplotlib
-
-
-
-matplotlib.use('Agg')  
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from collections import defaultdict
 import numpy as np
 import seaborn as sns
 from mpl_toolkits.mplot3d import Axes3D
+from multiprocessing import Pool
 
 if not os.path.exists("plots"):
     os.makedirs("plots")
@@ -403,34 +401,35 @@ def generate_3d_heatmap(genome, Ns, ls, ps, min_overlaps):
     print("All 3D plots and heatmap generated!")
 
 
+def run_experiment_wrapper(args):
+    return run_experiment(*args)
+
+
 def run_full_experiments(genome):
-    """Vary one parameter at a time and analyze genome assembly results."""
     Ns = [100, 500, 2000, 5000, 10000]
     ls = [25, 50, 100, 200, 300, 400]
     ps = [0.005, 0.01, 0.05, 0.1]
-    min_overlaps = [5, 10,30, 50]
-    results = []
+    min_overlaps = [5, 10, 30, 50]
+
+    params = []
     for N in Ns:
-        l, p, min_overlap = 100, 0.01, 20
-        result = run_experiment(genome, N, l, p, min_overlap)
-        results.append(('N', N, result))
+        params.append(('N', (genome, N, 100, 0.01, 20)))
     for l in ls:
-        N, p, min_overlap = 1000, 0.01, 20
-        result = run_experiment(genome, N, l, p, min_overlap)
-        results.append(('l', l, result))
+        params.append(('l', (genome, 1000, l, 0.01, 20)))
     for p in ps:
-        N, l, min_overlap = 1000, 100, 20
-        result = run_experiment(genome, N, l, p, min_overlap)
-        results.append(('p', p, result))
+        params.append(('p', (genome, 1000, 100, p, 20)))
     for min_overlap in min_overlaps:
-        N, l, p = 1000, 100, 0.01
-        result = run_experiment(genome, N, l, p, min_overlap)
-        results.append(('min_overlap', min_overlap, result))
+        params.append(('min_overlap', (genome, 1000, 100, 0.01, min_overlap)))
+
+    with Pool(processes=7) as pool:
+        results = pool.map(run_experiment_wrapper, [x[1] for x in params])
+
+    results = [(params[i][0], params[i][1][1], res) for i, res in enumerate(results)]
     generate_plots(results)
     generate_3d_heatmap(genome, Ns, ls, ps, min_overlaps)
 
 
-# Experminting the params
-fasta_file = "sequence.fasta"
-genome = sequence(fasta_file)
-run_full_experiments(genome)
+if __name__ == '__main__':
+    fasta_file = "sequence.fasta"
+    genome = sequence(fasta_file)
+    run_full_experiments(genome)
