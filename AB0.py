@@ -278,7 +278,7 @@ def generate_plots(N_values, l_values, p_values, min_overlap_values, error_rate_
 
 
 def run_full_experiments(genome):
-    Ns = [100, 500, 2000, 5000, 10000]
+    Ns = [100, 500, 2000, 5000]
     ls = [25, 50, 100, 200, 300, 400]
     ps = [0.005, 0.01, 0.05, 0.1]
     min_overlaps = [5, 10, 30, 50]
