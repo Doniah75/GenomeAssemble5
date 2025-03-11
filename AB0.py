@@ -126,283 +126,155 @@ def run_experiment(genome, N, l, p, min_overlap):
             error_rate_free, error_rate_prone, N50_free, N50_prone)
 
 
-def generate_plots(results):
-    for param, label in zip(['N', 'l', 'p', 'min_overlap'], ["N", "l", "p", "min_overlap"]):
-        param_values = [x[1] for x in results if x[0] == label]
-        acc_free = [x[2][0] for x in results if x[0] == label]
-        acc_prone = [x[2][1] for x in results if x[0] == label]
-        coverage = [x[2][2] for x in results if x[0] == label]
-        genome_fraction_free = [x[2][3] for x in results if x[0] == label]
-        genome_fraction_prone = [x[2][4] for x in results if x[0] == label]
-        error_rate_free = [x[2][5] for x in results if x[0] == label]
-        error_rate_prone = [x[2][6] for x in results if x[0] == label]
-        N50_free = [x[2][7] for x in results if x[0] == label]
-        N50_prone = [x[2][8] for x in results if x[0] == label]
-        plt.figure()
-        plt.plot(param_values, acc_free, marker='o', linestyle='-', color='green', linewidth=2.5, label="Error-Free Accuracy")
-        plt.xlabel(f"{label}")
-        plt.ylabel("Accuracy")
-        plt.title(f"Error-Free Accuracy vs {label}")
-        plt.xlim(min(param_values), max(param_values))
-        plt.legend()
-        plt.grid()
-        plt.savefig(f"plots/accuracy_error_free_vs_{label}.png")
-        plt.close()
-        plt.figure()
-        plt.plot(param_values, acc_prone, marker='o', linestyle='-', color='orange', linewidth=2.5, label="Error-Prone Accuracy")
-        plt.xlabel(f"{label}")
-        plt.ylabel("Accuracy")
-        plt.title(f"Error-Prone Accuracy vs {label}")
-        plt.xlim(min(param_values), max(param_values))
-        plt.legend()
-        plt.grid()
-        plt.savefig(f"plots/accuracy_error_prone_vs_{label}.png")
-        plt.close()
-        plt.figure()
-        plt.plot(param_values, acc_free, marker='o', linestyle='-', color='green', linewidth=2.5, label="Error-Free Accuracy")
-        plt.plot(param_values, acc_prone, marker='o', linestyle='-', color='orange', linewidth=2.5, label="Error-Prone Accuracy")
-        plt.xlabel(f"{label}")
-        plt.ylabel("Accuracy")
-        plt.title(f"Accuracy vs {label}")
-        plt.xlim(min(param_values), max(param_values))
-        plt.legend()
-        plt.grid()
-        plt.savefig(f"plots/accuracy_combined_vs_{label}.png")
-        plt.close()
-        plt.figure()
-        plt.plot(param_values, coverage, marker='o', linestyle='-', color='green', linewidth=2.5, label="Coverage (Error-Free)")
-        plt.xlabel(f"{label}")
-        plt.ylabel("Coverage")
-        plt.title(f"Coverage (Error-Free) vs {label}")
-        plt.xlim(min(param_values), max(param_values))
-        plt.legend()
-        plt.grid()
-        plt.savefig(f"plots/coverage_error_free_vs_{label}.png")
-        plt.close()
-        plt.figure()
-        plt.plot(param_values, coverage, marker='o', linestyle='-', color='orange', linewidth=2.5, label="Coverage (Error-Prone)")
-        plt.xlabel(f"{label}")
-        plt.ylabel("Coverage")
-        plt.title(f"Coverage (Error-Prone) vs {label}")
-        plt.xlim(min(param_values), max(param_values))
-        plt.legend()
-        plt.grid()
-        plt.savefig(f"plots/coverage_error_prone_vs_{label}.png")
-        plt.close()
-        plt.figure()
-        plt.plot(param_values, coverage, marker='o', linestyle='-', color='green', linewidth=2.5, label="Coverage (Error-Free)")
-        plt.plot(param_values, coverage, marker='o', linestyle='-', color='orange', linewidth=2.5, label="Coverage (Error-Prone)")
-        plt.xlabel(f"{label}")
-        plt.ylabel("Coverage")
-        plt.title(f"Coverage vs {label}")
-        plt.xlim(min(param_values), max(param_values))
-        plt.legend()
-        plt.grid()
-        plt.savefig(f"plots/coverage_combined_vs_{label}.png")
-        plt.close()
-        plt.figure()
-        plt.plot(param_values, genome_fraction_free, marker='o', linestyle='-', color='green', linewidth=2.5, label="Genome Fraction (Error-Free)")
-        plt.xlabel(f"{label}")
-        plt.ylabel("Genome Fraction")
-        plt.title(f"Genome Fraction (Error-Free) vs {label}")
-        plt.xlim(min(param_values), max(param_values))
-        plt.legend()
-        plt.grid()
-        plt.savefig(f"plots/genome_fraction_error_free_vs_{label}.png")
-        plt.close()
-        plt.figure()
-        plt.plot(param_values, genome_fraction_prone, marker='o', linestyle='-', color='orange', linewidth=2.5, label="Genome Fraction (Error-Prone)")
-        plt.xlabel(f"{label}")
-        plt.ylabel("Genome Fraction")
-        plt.title(f"Genome Fraction (Error-Prone) vs {label}")
-        plt.xlim(min(param_values), max(param_values))
-        plt.legend()
-        plt.grid()
-        plt.savefig(f"plots/genome_fraction_error_prone_vs_{label}.png")
-        plt.close()
-        plt.figure()
-        plt.plot(param_values, genome_fraction_free, marker='o', linestyle='-', color='green', linewidth=2.5, label="Genome Fraction (Error-Free)")
-        plt.plot(param_values, genome_fraction_prone, marker='o', linestyle='-', color='orange', linewidth=2.5, label="Genome Fraction (Error-Prone)")
-        plt.xlabel(f"{label}")
-        plt.ylabel("Genome Fraction")
-        plt.title(f"Genome Fraction vs {label}")
-        plt.xlim(min(param_values), max(param_values))
-        plt.legend()
-        plt.grid()
-        plt.savefig(f"plots/genome_fraction_combined_vs_{label}.png")
-        plt.close()
-        plt.figure()
-        plt.plot(param_values, error_rate_free, marker='o', linestyle='-', color='green', linewidth=2.5, label="Error Rate (Error-Free)")
-        plt.xlabel(f"{label}")
-        plt.ylabel("Error Rate")
-        plt.title(f"Error Rate (Error-Free) vs {label}")
-        plt.xlim(min(param_values), max(param_values))
-        plt.legend()
-        plt.grid()
-        plt.savefig(f"plots/error_rate_error_free_vs_{label}.png")
-        plt.close()
-        plt.figure()
-        plt.plot(param_values, error_rate_prone, marker='o', linestyle='-', color='orange', linewidth=2.5, label="Error Rate (Error-Prone)")
-        plt.xlabel(f"{label}")
-        plt.ylabel("Error Rate")
-        plt.title(f"Error Rate (Error-Prone) vs {label}")
-        plt.xlim(min(param_values), max(param_values))
-        plt.legend()
-        plt.grid()
-        plt.savefig(f"plots/error_rate_error_prone_vs_{label}.png")
-        plt.close()
-        plt.figure()
-        plt.plot(param_values, error_rate_free, marker='o', linestyle='-', color='green', linewidth=2.5, label="Error Rate (Error-Free)")
-        plt.plot(param_values, error_rate_prone, marker='o', linestyle='-', color='orange', linewidth=2.5, label="Error Rate (Error-Prone)")
-        plt.xlabel(f"{label}")
-        plt.ylabel("Error Rate")
-        plt.title(f"Error Rate vs {label}")
-        plt.xlim(min(param_values), max(param_values))
-        plt.legend()
-        plt.grid()
-        plt.savefig(f"plots/error_rate_combined_vs_{label}.png")
-        plt.close()
-        plt.figure()
-        plt.plot(param_values, N50_free, marker='o', linestyle='-', color='green', linewidth=2.5, label="N50 (Error-Free)")
-        plt.xlabel(f"{label}")
-        plt.ylabel("N50")
-        plt.title(f"N50 (Error-Free) vs {label}")
-        plt.xlim(min(param_values), max(param_values))
-        plt.legend()
-        plt.grid()
-        plt.savefig(f"plots/N50_error_free_vs_{label}.png")
-        plt.close()
-        plt.figure()
-        plt.plot(param_values, N50_prone, marker='o', linestyle='-', color='orange', linewidth=2.5, label="N50 (Error-Prone)")
-        plt.xlabel(f"{label}")
-        plt.ylabel("N50")
-        plt.title(f"N50 (Error-Prone) vs {label}")
-        plt.xlim(min(param_values), max(param_values))
-        plt.legend()
-        plt.grid()
-        plt.savefig(f"plots/N50_error_prone_vs_{label}.png")
-        plt.close()
-        plt.figure()
-        plt.plot(param_values, N50_free, marker='o', linestyle='-', color='green', linewidth=2.5, label="N50 (Error-Free)")
-        plt.plot(param_values, N50_prone, marker='o', linestyle='-', color='orange', linewidth=2.5, label="N50 (Error-Prone)")
-        plt.xlabel(f"{label}")
-        plt.ylabel("N50")
-        plt.title(f"N50 vs {label}")
-        plt.xlim(min(param_values), max(param_values))
-        plt.legend()
-        plt.grid()
-        plt.savefig(f"plots/N50_combined_vs_{label}.png")
-        plt.close()
-    print("All basic plots saved in the 'plots' folder!")
+def run_experiment_wrapper(args):
+    return run_experiment(*args)
 
 
 def generate_3d_heatmap(genome, Ns, ls, ps, min_overlaps):
-    N_values_3d = []
-    l_values_3d = []
-    p_values_3d = []
-    min_overlap_values_3d = []
-    error_rate_values_3d = []
-    coverage_values_3d = []
-    genome_fraction_values_3d = []
-    N50_values_3d = []
+    # Lists to store results for error-free and error-prone scenarios
+    N_values_3d_free, l_values_3d_free, p_values_3d_free, min_overlap_values_3d_free = [], [], [], []
+    error_rate_values_3d_free, coverage_values_3d_free, genome_fraction_values_3d_free, N50_values_3d_free = [], [], [], []
+
+    N_values_3d_prone, l_values_3d_prone, p_values_3d_prone, min_overlap_values_3d_prone = [], [], [], []
+    error_rate_values_3d_prone, coverage_values_3d_prone, genome_fraction_values_3d_prone, N50_values_3d_prone = [], [], [], []
+
     min_overlap_values_heatmap = sorted(min_overlaps)
     N_values_heatmap = sorted(Ns)
-    error_rate_grid = np.zeros((len(min_overlap_values_heatmap), len(N_values_heatmap)))
-    for N in Ns:
-        for l in ls:
-            for p in ps:
-                for min_overlap in min_overlaps:
-                    result = run_experiment(genome, N, l, p, min_overlap)
-                    acc_free, acc_prone, coverage, genome_fraction_free, genome_fraction_prone, error_rate_free, error_rate_prone, N50_free, N50_prone = result
-                    N_values_3d.append(N)
-                    l_values_3d.append(l)
-                    p_values_3d.append(p)
-                    min_overlap_values_3d.append(min_overlap)
-                    error_rate_values_3d.append(error_rate_prone)
-                    coverage_values_3d.append(coverage)
-                    genome_fraction_values_3d.append(genome_fraction_prone)
-                    N50_values_3d.append(N50_prone)
-                    min_overlap_index = min_overlap_values_heatmap.index(min_overlap)
-                    N_index = N_values_heatmap.index(N)
-                    error_rate_grid[min_overlap_index, N_index] = error_rate_prone
+    error_rate_grid_free = np.zeros((len(min_overlap_values_heatmap), len(N_values_heatmap)))
+    error_rate_grid_prone = np.zeros((len(min_overlap_values_heatmap), len(N_values_heatmap)))
+
+    # Create a list of all parameter combinations
+    param_combinations = [(genome, N, l, p, min_overlap) for N in Ns for l in ls for p in ps for min_overlap in min_overlaps]
+
+    # Use multiprocessing to compute results in parallel
+    with Pool(processes=7) as pool:
+        results = pool.map(run_experiment_wrapper, param_combinations)
+
+    # Collect results for error-free and error-prone scenarios
+    for i, result in enumerate(results):
+        N, l, p, min_overlap = param_combinations[i][1], param_combinations[i][2], param_combinations[i][3], param_combinations[i][4]
+        acc_free, acc_prone, coverage, genome_fraction_free, genome_fraction_prone, error_rate_free, error_rate_prone, N50_free, N50_prone = result
+
+        # Error-free results
+        N_values_3d_free.append(N)
+        l_values_3d_free.append(l)
+        p_values_3d_free.append(p)
+        min_overlap_values_3d_free.append(min_overlap)
+        error_rate_values_3d_free.append(error_rate_free)
+        coverage_values_3d_free.append(coverage)
+        genome_fraction_values_3d_free.append(genome_fraction_free)
+        N50_values_3d_free.append(N50_free)
+        min_overlap_index = min_overlap_values_heatmap.index(min_overlap)
+        N_index = N_values_heatmap.index(N)
+        error_rate_grid_free[min_overlap_index, N_index] = error_rate_free
+
+        # Error-prone results
+        N_values_3d_prone.append(N)
+        l_values_3d_prone.append(l)
+        p_values_3d_prone.append(p)
+        min_overlap_values_3d_prone.append(min_overlap)
+        error_rate_values_3d_prone.append(error_rate_prone)
+        coverage_values_3d_prone.append(coverage)
+        genome_fraction_values_3d_prone.append(genome_fraction_prone)
+        N50_values_3d_prone.append(N50_prone)
+        error_rate_grid_prone[min_overlap_index, N_index] = error_rate_prone
+
+    # Generate 3D plots and heatmaps for error-free scenarios
+    generate_plots(N_values_3d_free, l_values_3d_free, p_values_3d_free, min_overlap_values_3d_free,
+                   error_rate_values_3d_free, coverage_values_3d_free, genome_fraction_values_3d_free, N50_values_3d_free,
+                   error_rate_grid_free, min_overlap_values_heatmap, N_values_heatmap, "error_free")
+
+    # Generate 3D plots and heatmaps for error-prone scenarios
+    generate_plots(N_values_3d_prone, l_values_3d_prone, p_values_3d_prone, min_overlap_values_3d_prone,
+                   error_rate_values_3d_prone, coverage_values_3d_prone, genome_fraction_values_3d_prone, N50_values_3d_prone,
+                   error_rate_grid_prone, min_overlap_values_heatmap, N_values_heatmap, "error_prone")
+
+    print("All 3D plots and heatmaps generated!")
+
+
+def generate_plots(N_values, l_values, p_values, min_overlap_values, error_rate_values, coverage_values,
+                   genome_fraction_values, N50_values, error_rate_grid, min_overlap_values_heatmap, N_values_heatmap, suffix):
+    # Generate 3D plots
     fig = plt.figure(figsize=(12, 8))
     ax = fig.add_subplot(111, projection='3d')
-    scatter = ax.scatter(N_values_3d, l_values_3d, error_rate_values_3d, c=error_rate_values_3d, cmap='inferno', marker='o', s=100, depthshade=True)
+    scatter = ax.scatter(N_values, l_values, error_rate_values, c=error_rate_values, cmap='inferno', marker='o', s=100, depthshade=True)
     ax.set_xlabel("Number of Reads (N)", fontsize=12)
     ax.set_ylabel("Read Length (l)", fontsize=12)
     ax.set_zlabel("Error Rate", fontsize=12)
-    plt.title("3D Plot: N, l, and Error Rate", fontsize=16)
+    plt.title(f"3D Plot: N, l, and Error Rate ({suffix})", fontsize=16)
     cbar = plt.colorbar(scatter)
     cbar.set_label('Error Rate', fontsize=12)
-    plt.savefig("plots/3d_plot_N_l_error_rate_all_combinations.png", bbox_inches='tight', transparent=True)
+    plt.savefig(f"plots/3d_plot_N_l_error_rate_{suffix}.png", bbox_inches='tight', transparent=True)
     plt.close()
+
     fig = plt.figure(figsize=(12, 8))
     ax = fig.add_subplot(111, projection='3d')
-    scatter = ax.scatter(p_values_3d, N_values_3d, error_rate_values_3d, c=error_rate_values_3d, cmap='viridis', marker='o', s=100, depthshade=True)
+    scatter = ax.scatter(p_values, N_values, error_rate_values, c=error_rate_values, cmap='viridis', marker='o', s=100, depthshade=True)
     ax.set_xlabel("Error Probability (p)", fontsize=12)
     ax.set_ylabel("Number of Reads (N)", fontsize=12)
     ax.set_zlabel("Error Rate", fontsize=12)
-    plt.title("3D Plot: p, N, and Error Rate", fontsize=16)
+    plt.title(f"3D Plot: p, N, and Error Rate ({suffix})", fontsize=16)
     cbar = plt.colorbar(scatter)
     cbar.set_label('Error Rate', fontsize=12)
-    plt.savefig("plots/3d_plot_p_N_error_rate_all_combinations.png", bbox_inches='tight', transparent=True)
+    plt.savefig(f"plots/3d_plot_p_N_error_rate_{suffix}.png", bbox_inches='tight', transparent=True)
     plt.close()
+
     fig = plt.figure(figsize=(12, 8))
     ax = fig.add_subplot(111, projection='3d')
-    scatter = ax.scatter(p_values_3d, l_values_3d, error_rate_values_3d, c=error_rate_values_3d, cmap='plasma', marker='o', s=100, depthshade=True)
+    scatter = ax.scatter(p_values, l_values, error_rate_values, c=error_rate_values, cmap='plasma', marker='o', s=100, depthshade=True)
     ax.set_xlabel("Error Probability (p)", fontsize=12)
     ax.set_ylabel("Read Length (l)", fontsize=12)
     ax.set_zlabel("Error Rate", fontsize=12)
-    plt.title("3D Plot: p, l, and Error Rate", fontsize=16)
+    plt.title(f"3D Plot: p, l, and Error Rate ({suffix})", fontsize=16)
     cbar = plt.colorbar(scatter)
     cbar.set_label('Error Rate', fontsize=12)
-    plt.savefig("plots/3d_plot_p_l_error_rate_all_combinations.png", bbox_inches='tight', transparent=True)
+    plt.savefig(f"plots/3d_plot_p_l_error_rate_{suffix}.png", bbox_inches='tight', transparent=True)
     plt.close()
+
     fig = plt.figure(figsize=(12, 8))
     ax = fig.add_subplot(111, projection='3d')
-    scatter = ax.scatter(N_values_3d, p_values_3d, coverage_values_3d, c=coverage_values_3d, cmap='cool', marker='o', s=100, depthshade=True)
+    scatter = ax.scatter(N_values, p_values, coverage_values, c=coverage_values, cmap='cool', marker='o', s=100, depthshade=True)
     ax.set_xlabel("Number of Reads (N)", fontsize=12)
     ax.set_ylabel("Error Probability (p)", fontsize=12)
     ax.set_zlabel("Coverage", fontsize=12)
-    plt.title("3D Plot: N, p, and Coverage", fontsize=16)
+    plt.title(f"3D Plot: N, p, and Coverage ({suffix})", fontsize=16)
     cbar = plt.colorbar(scatter)
     cbar.set_label('Coverage', fontsize=12)
-    plt.savefig("plots/3d_plot_N_p_coverage_all_combinations.png", bbox_inches='tight', transparent=True)
+    plt.savefig(f"plots/3d_plot_N_p_coverage_{suffix}.png", bbox_inches='tight', transparent=True)
     plt.close()
+
     fig = plt.figure(figsize=(12, 8))
     ax = fig.add_subplot(111, projection='3d')
-    scatter = ax.scatter(l_values_3d, min_overlap_values_3d, genome_fraction_values_3d, c=genome_fraction_values_3d, cmap='spring', marker='o', s=100, depthshade=True)
+    scatter = ax.scatter(l_values, min_overlap_values, genome_fraction_values, c=genome_fraction_values, cmap='spring', marker='o', s=100, depthshade=True)
     ax.set_xlabel("Read Length (l)", fontsize=12)
     ax.set_ylabel("Minimum Overlap (min_overlap)", fontsize=12)
     ax.set_zlabel("Genome Fraction", fontsize=12)
-    plt.title("3D Plot: l, min_overlap, and Genome Fraction", fontsize=16)
+    plt.title(f"3D Plot: l, min_overlap, and Genome Fraction ({suffix})", fontsize=16)
     cbar = plt.colorbar(scatter)
     cbar.set_label('Genome Fraction', fontsize=12)
-    plt.savefig("plots/3d_plot_l_min_overlap_genome_fraction_all_combinations.png", bbox_inches='tight', transparent=True)
+    plt.savefig(f"plots/3d_plot_l_min_overlap_genome_fraction_{suffix}.png", bbox_inches='tight', transparent=True)
     plt.close()
+
     fig = plt.figure(figsize=(12, 8))
     ax = fig.add_subplot(111, projection='3d')
-    scatter = ax.scatter(N_values_3d, l_values_3d, N50_values_3d, c=N50_values_3d, cmap='winter', marker='o', s=100, depthshade=True)
+    scatter = ax.scatter(N_values, l_values, N50_values, c=N50_values, cmap='winter', marker='o', s=100, depthshade=True)
     ax.set_xlabel("Number of Reads (N)", fontsize=12)
     ax.set_ylabel("Read Length (l)", fontsize=12)
     ax.set_zlabel("N50", fontsize=12)
-    plt.title("3D Plot: N, l, and N50", fontsize=16)
+    plt.title(f"3D Plot: N, l, and N50 ({suffix})", fontsize=16)
     cbar = plt.colorbar(scatter)
     cbar.set_label('N50', fontsize=12)
-    plt.savefig("plots/3d_plot_N_l_N50_all_combinations.png", bbox_inches='tight', transparent=True)
+    plt.savefig(f"plots/3d_plot_N_l_N50_{suffix}.png", bbox_inches='tight', transparent=True)
     plt.close()
+
+    # Generate heatmap
     plt.figure(figsize=(10, 8))
     sns.heatmap(error_rate_grid, annot=True, fmt=".4f", xticklabels=N_values_heatmap, yticklabels=min_overlap_values_heatmap, cmap="YlOrRd", cbar_kws={'label': 'Error Rate'})
     plt.xlabel("Number of Reads (N)", fontsize=14)
     plt.ylabel("Minimum Overlap (min_overlap)", fontsize=14)
-    plt.title("Error Rate Heatmap (min_overlap vs N)", fontsize=16)
-    plt.savefig("plots/error_rate_heatmap_min_overlap_vs_N_all_combinations.png", bbox_inches='tight', transparent=True)
+    plt.title(f"Error Rate Heatmap (min_overlap vs N) ({suffix})", fontsize=16)
+    plt.savefig(f"plots/error_rate_heatmap_min_overlap_vs_N_{suffix}.png", bbox_inches='tight', transparent=True)
     plt.close()
-    print("All 3D plots and heatmap generated!")
-
-
-def run_experiment_wrapper(args):
-    return run_experiment(*args)
 
 
 def run_full_experiments(genome):
@@ -411,21 +283,6 @@ def run_full_experiments(genome):
     ps = [0.005, 0.01, 0.05, 0.1]
     min_overlaps = [5, 10, 30, 50]
 
-    params = []
-    for N in Ns:
-        params.append(('N', (genome, N, 100, 0.01, 20)))
-    for l in ls:
-        params.append(('l', (genome, 1000, l, 0.01, 20)))
-    for p in ps:
-        params.append(('p', (genome, 1000, 100, p, 20)))
-    for min_overlap in min_overlaps:
-        params.append(('min_overlap', (genome, 1000, 100, 0.01, min_overlap)))
-
-    with Pool(processes=7) as pool:
-        results = pool.map(run_experiment_wrapper, [x[1] for x in params])
-
-    results = [(params[i][0], params[i][1][1], res) for i, res in enumerate(results)]
-    generate_plots(results)
     generate_3d_heatmap(genome, Ns, ls, ps, min_overlaps)
 
 
