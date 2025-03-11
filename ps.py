@@ -165,7 +165,8 @@ def run_experiment_wrapper(args):
 
 
 def run_full_experiments(genome):
-    ps = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
+    ps = [0.001,  0.012,  0.023,  0.034,  0.045,  0.056,  0.067,  0.078,  0.089,  0.1  ]
+
     params = [('p', (genome, 1000, 100, p, 20)) for p in ps]
 
     with Pool(processes=7) as pool:
