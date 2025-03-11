@@ -9,9 +9,6 @@ import seaborn as sns
 from mpl_toolkits.mplot3d import Axes3D
 from multiprocessing import Pool
 
-if not os.path.exists("plots"):
-    os.makedirs("plots")
-
 
 def sequence(fasta_file):
     with open(fasta_file, 'r') as file:
@@ -130,7 +127,7 @@ def run_experiment_wrapper(args):
     return run_experiment(*args)
 
 
-def generate_3d_heatmap(genome, Ns, ls, ps, min_overlaps):
+def generate_3d_heatmap(genome, Ns, ls, ps, min_overlaps, output_folder):
     # Lists to store results for error-free and error-prone scenarios
     N_values_3d_free, l_values_3d_free, p_values_3d_free, min_overlap_values_3d_free = [], [], [], []
     error_rate_values_3d_free, coverage_values_3d_free, genome_fraction_values_3d_free, N50_values_3d_free = [], [], [], []
@@ -182,18 +179,18 @@ def generate_3d_heatmap(genome, Ns, ls, ps, min_overlaps):
     # Generate 3D plots and heatmaps for error-free scenarios
     generate_plots(N_values_3d_free, l_values_3d_free, p_values_3d_free, min_overlap_values_3d_free,
                    error_rate_values_3d_free, coverage_values_3d_free, genome_fraction_values_3d_free, N50_values_3d_free,
-                   error_rate_grid_free, min_overlap_values_heatmap, N_values_heatmap, "error_free")
+                   error_rate_grid_free, min_overlap_values_heatmap, N_values_heatmap, "error_free", output_folder)
 
     # Generate 3D plots and heatmaps for error-prone scenarios
     generate_plots(N_values_3d_prone, l_values_3d_prone, p_values_3d_prone, min_overlap_values_3d_prone,
                    error_rate_values_3d_prone, coverage_values_3d_prone, genome_fraction_values_3d_prone, N50_values_3d_prone,
-                   error_rate_grid_prone, min_overlap_values_heatmap, N_values_heatmap, "error_prone")
+                   error_rate_grid_prone, min_overlap_values_heatmap, N_values_heatmap, "error_prone", output_folder)
 
-    print("All 3D plots and heatmaps generated!")
+    print(f"All 3D plots and heatmaps generated for {output_folder}!")
 
 
 def generate_plots(N_values, l_values, p_values, min_overlap_values, error_rate_values, coverage_values,
-                   genome_fraction_values, N50_values, error_rate_grid, min_overlap_values_heatmap, N_values_heatmap, suffix):
+                   genome_fraction_values, N50_values, error_rate_grid, min_overlap_values_heatmap, N_values_heatmap, suffix, output_folder):
     # Generate 3D plots
     fig = plt.figure(figsize=(12, 8))
     ax = fig.add_subplot(111, projection='3d')
@@ -204,7 +201,7 @@ def generate_plots(N_values, l_values, p_values, min_overlap_values, error_rate_
     plt.title(f"3D Plot: N, l, and Error Rate ({suffix})", fontsize=16)
     cbar = plt.colorbar(scatter)
     cbar.set_label('Error Rate', fontsize=12)
-    plt.savefig(f"plots/3d_plot_N_l_error_rate_{suffix}.png", bbox_inches='tight', transparent=True)
+    plt.savefig(f"{output_folder}/3d_plot_N_l_error_rate_{suffix}.png", bbox_inches='tight', transparent=True)
     plt.close()
 
     fig = plt.figure(figsize=(12, 8))
@@ -216,7 +213,7 @@ def generate_plots(N_values, l_values, p_values, min_overlap_values, error_rate_
     plt.title(f"3D Plot: p, N, and Error Rate ({suffix})", fontsize=16)
     cbar = plt.colorbar(scatter)
     cbar.set_label('Error Rate', fontsize=12)
-    plt.savefig(f"plots/3d_plot_p_N_error_rate_{suffix}.png", bbox_inches='tight', transparent=True)
+    plt.savefig(f"{output_folder}/3d_plot_p_N_error_rate_{suffix}.png", bbox_inches='tight', transparent=True)
     plt.close()
 
     fig = plt.figure(figsize=(12, 8))
@@ -228,7 +225,7 @@ def generate_plots(N_values, l_values, p_values, min_overlap_values, error_rate_
     plt.title(f"3D Plot: p, l, and Error Rate ({suffix})", fontsize=16)
     cbar = plt.colorbar(scatter)
     cbar.set_label('Error Rate', fontsize=12)
-    plt.savefig(f"plots/3d_plot_p_l_error_rate_{suffix}.png", bbox_inches='tight', transparent=True)
+    plt.savefig(f"{output_folder}/3d_plot_p_l_error_rate_{suffix}.png", bbox_inches='tight', transparent=True)
     plt.close()
 
     fig = plt.figure(figsize=(12, 8))
@@ -240,7 +237,7 @@ def generate_plots(N_values, l_values, p_values, min_overlap_values, error_rate_
     plt.title(f"3D Plot: N, p, and Coverage ({suffix})", fontsize=16)
     cbar = plt.colorbar(scatter)
     cbar.set_label('Coverage', fontsize=12)
-    plt.savefig(f"plots/3d_plot_N_p_coverage_{suffix}.png", bbox_inches='tight', transparent=True)
+    plt.savefig(f"{output_folder}/3d_plot_N_p_coverage_{suffix}.png", bbox_inches='tight', transparent=True)
     plt.close()
 
     fig = plt.figure(figsize=(12, 8))
@@ -252,7 +249,7 @@ def generate_plots(N_values, l_values, p_values, min_overlap_values, error_rate_
     plt.title(f"3D Plot: l, min_overlap, and Genome Fraction ({suffix})", fontsize=16)
     cbar = plt.colorbar(scatter)
     cbar.set_label('Genome Fraction', fontsize=12)
-    plt.savefig(f"plots/3d_plot_l_min_overlap_genome_fraction_{suffix}.png", bbox_inches='tight', transparent=True)
+    plt.savefig(f"{output_folder}/3d_plot_l_min_overlap_genome_fraction_{suffix}.png", bbox_inches='tight', transparent=True)
     plt.close()
 
     fig = plt.figure(figsize=(12, 8))
@@ -264,7 +261,7 @@ def generate_plots(N_values, l_values, p_values, min_overlap_values, error_rate_
     plt.title(f"3D Plot: N, l, and N50 ({suffix})", fontsize=16)
     cbar = plt.colorbar(scatter)
     cbar.set_label('N50', fontsize=12)
-    plt.savefig(f"plots/3d_plot_N_l_N50_{suffix}.png", bbox_inches='tight', transparent=True)
+    plt.savefig(f"{output_folder}/3d_plot_N_l_N50_{suffix}.png", bbox_inches='tight', transparent=True)
     plt.close()
 
     # Generate heatmap
@@ -273,20 +270,31 @@ def generate_plots(N_values, l_values, p_values, min_overlap_values, error_rate_
     plt.xlabel("Number of Reads (N)", fontsize=14)
     plt.ylabel("Minimum Overlap (min_overlap)", fontsize=14)
     plt.title(f"Error Rate Heatmap (min_overlap vs N) ({suffix})", fontsize=16)
-    plt.savefig(f"plots/error_rate_heatmap_min_overlap_vs_N_{suffix}.png", bbox_inches='tight', transparent=True)
+    plt.savefig(f"{output_folder}/error_rate_heatmap_min_overlap_vs_N_{suffix}.png", bbox_inches='tight', transparent=True)
     plt.close()
 
 
-def run_full_experiments(genome):
+def run_full_experiments(genome, fraction, output_folder):
     Ns = [100, 500, 2000, 5000, 10000]
     ls = [25, 50, 100, 200, 300, 400]
     ps = [0.005, 0.01, 0.05, 0.1]
     min_overlaps = [5, 10, 30, 50]
 
-    generate_3d_heatmap(genome, Ns, ls, ps, min_overlaps)
+    # Extract the fraction of the genome
+    genome_length = len(genome)
+    fraction_length = int(genome_length * fraction)
+    genome_fraction = genome[:fraction_length]
+
+    # Create output folder if it doesn't exist
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+
+    generate_3d_heatmap(genome_fraction, Ns, ls, ps, min_overlaps, output_folder)
 
 
 if __name__ == '__main__':
     fasta_file = "sequence.fasta"
     genome = sequence(fasta_file)
-    run_full_experiments(genome)
+    run_full_experiments(genome, 0.25, "plots1")
+    run_full_experiments(genome, 0.5, "plots2")
+    run_full_experiments(genome, 0.75, "plots3")
